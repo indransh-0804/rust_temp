@@ -39,7 +39,7 @@
           };
         in {
           name = "rust-stable-default";
-          target = "x86_64-unknown-linux-musl"
+          target = "x86_64-unknown-linux-musl";
           path = "${rustToolchain}/lib/rustlib/src/rust/library";
           nativeBuildInputs = with pkgs; [
             rustToolchain
