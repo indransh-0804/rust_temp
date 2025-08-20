@@ -39,6 +39,7 @@
           };
         in {
           name = "rust-stable-default";
+          target = "x86_64-unknown-linux-musl"
           path = "${rustToolchain}/lib/rustlib/src/rust/library";
           nativeBuildInputs = with pkgs; [
             rustToolchain
@@ -61,7 +62,7 @@
           shellHook = ''
             export RUST_BACKTRACE=1
             export CARGO_BUILD_TARGET="x86_64-unknown-linux-musl"
-            export CARGO_TARGET_DIR=$PWD/target/${CARGO_BUILD_TARGET}
+            export CARGO_TARGET_DIR=$PWD/target/${rustInfo.target}
             export CARGO_HOME=$PWD/.cargo
 
             alias ls='eza -a --icons'
