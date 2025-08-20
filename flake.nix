@@ -61,7 +61,7 @@
           nativeBuildInputs = rustInfo.nativeBuildInputs;
           shellHook = ''
             export RUST_BACKTRACE=1
-            export CARGO_BUILD_TARGET="x86_64-unknown-linux-musl"
+            export CARGO_BUILD_TARGET="${rustInfo.target}"
             export CARGO_TARGET_DIR=$PWD/target/${rustInfo.target}
             export CARGO_HOME=$PWD/.cargo
 
