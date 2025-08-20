@@ -60,7 +60,7 @@
           buildInputs = rustInfo.buildInputs;
           nativeBuildInputs = rustInfo.nativeBuildInputs;
           shellHook = ''
-            export RUST_BACKTRACE=1
+            export RUST_BACKTRACE=2
             export CARGO_BUILD_TARGET="${rustInfo.target}"
             export CARGO_TARGET_DIR=$PWD/target/${rustInfo.target}
             export CARGO_HOME=$PWD/.cargo
@@ -71,6 +71,11 @@
             echo "🦀 building development environment for ${rustInfo.name} ..."
           '';
         };
+      };
+
+      flake.templates.default = {
+        path = ./.;
+        description = "Rust Project template with Nix DevShell";
       };
     };
 }
