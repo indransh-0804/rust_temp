@@ -60,8 +60,8 @@
           nativeBuildInputs = rustInfo.nativeBuildInputs;
           shellHook = ''
             export RUST_BACKTRACE=1
-            export CARGO_TARGET_DIR=$PWD/target/${CARGO_BUILD_TARGET}
             export CARGO_BUILD_TARGET="x86_64-unknown-linux-musl"
+            export CARGO_TARGET_DIR=$PWD/target/${CARGO_BUILD_TARGET}
             export CARGO_HOME=$PWD/.cargo
 
             alias ls='eza -a --icons'
