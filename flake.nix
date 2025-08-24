@@ -62,7 +62,7 @@
           shellHook = ''
             export RUST_BACKTRACE=2
             export CARGO_BUILD_TARGET="${rustInfo.target}"
-            export CARGO_TARGET_DIR=$PWD/target/${rustInfo.target}
+            export CARGO_TARGET_DIR=$PWD/target
             export CARGO_HOME=$PWD/.cargo
 
             alias ls='eza -a --icons'
