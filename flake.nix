@@ -6,9 +6,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -25,16 +23,16 @@
         config,
         pkgs,
         system,
+        lib,
         ...
       }: let
         pkgs = import inputs.nixpkgs {
           inherit system;
-          overlays = [(import inputs.rust-overlay)];
+          overlays = [inputs.rust-overlay.overlays.default];
         };
-
         rustInfo = let
           rustToolchain = pkgs.rust-bin.stable.latest.default.override {
-            extensions = ["rust-src" "clippy" "rustfmt"];
+            extensions = ["rust-src" "clippy" "rustfmt" "rust-analyzer"];
             targets = ["x86_64-unknown-linux-musl"];
           };
         in {
@@ -44,31 +42,37 @@
           nativeBuildInputs = with pkgs; [
             rustToolchain
             pkg-config
-            rust-analyzer
           ];
           buildInputs = with pkgs; [
             eza
             just
             openssl
+            sqlite
+            zlib
+            libiconv
             lld
           ];
         };
       in {
         devShells.default = pkgs.mkShell {
           name = rustInfo.name;
-          RUST_SRC_PATH = rustInfo.path;
+
           buildInputs = rustInfo.buildInputs;
           nativeBuildInputs = rustInfo.nativeBuildInputs;
+
+          env = {
+            RUST_BACKTRACE = "1";
+            RUST_SRC_PATH = rustInfo.path;
+            RUSTFLAGS = "-C link-arg=-fuse-ld=lld";
+            CARGO_BUILD_TARGET = rustInfo.target;
+          };
+
           shellHook = ''
-            export RUST_BACKTRACE=2
-            export CARGO_BUILD_TARGET="${rustInfo.target}"
             export CARGO_TARGET_DIR=$PWD/target
             export CARGO_HOME=$PWD/.cargo
-
             alias ls='eza -a --icons'
             alias lt='eza -T --icons --git-ignore'
-
-            echo "🦀 building development environment for ${rustInfo.name} ..."
+            echo "🦀 ${rustInfo.name} environment on ${system}!"
           '';
         };
       };
